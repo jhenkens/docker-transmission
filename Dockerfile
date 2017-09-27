@@ -28,6 +28,7 @@ RUN NB_CORES=${BUILD_CORES-`getconf _NPROCESSORS_CONF`} \
     binutils" \
  && \
  apk add --no-cache \
+    ${BUILD_DEPS} \
 	ca-certificates \
 	curl \
 	jq \
@@ -45,7 +46,9 @@ RUN NB_CORES=${BUILD_CORES-`getconf _NPROCESSORS_CONF`} \
 	unzip \
  && cd /tmp && mkdir transmission \
  && cd transmission && wget -qO- https://github.com/Mikayex/transmission/archive/${TRANSMISSION_VER}.tar.gz | tar xz --strip 1 \
- && cd /tmp/transmission && cmake . && make -j ${NB_CORES} && make install \
+ && cd /tmp/transmission \
+ && cmake . \
+ && make -j ${NB_CORES} && make install \
  && strip -s /usr/local/bin/transmission-daemon \
  && apk del ${BUILD_DEPS} \
  && rm -rf /var/cache/apk/* /tmp/*
